@@ -1,0 +1,6 @@
+flask
+selenium
+bs4
+pandas
+openpyxl
+gunicorn

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraping App</title>
+    <style>
+        /* CSS for displaying the "Please wait" message */
+        .loading-message {
+            display: none;
+            color: #333;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .loading-message.show {
+            display: block;
+        }
+
+        /* CSS for colors */
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: #007BFF; /* Blue color for the heading */
+        }
+
+        label {
+            color: #333;
+        }
+
+        input[type="text"] {
+            border: 1px solid #007BFF; /* Blue border for the input field */
+            padding: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF; /* Blue background color for the button */
+            color: #fff; /* White text color for the button */
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #ccc; /* Gray out the button when disabled */
+            cursor: not-allowed; /* Change cursor to not-allowed when disabled */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Web Scraper</h1>
+        <form method="POST" onsubmit="showLoadingMessage(); disableButton()">
+            <label for="query">Enter a Query:</label>
+            <input type="text" id="query" name="query" required>
+            <button type="submit" id="scrape-button">Scrape</button>
+        </form>
+        <p class="loading-message" id="loading-message">Please wait, scraping is in process...</p>
+       <!-- Add this to display scraped data -->
+{% if scraped_data %}
+<h2>Scraped Data</h2>
+<ol>
+    {% for entry in scraped_data %}
+    <li>
+        <strong>Company Name:</strong> {{ entry["Company Name"] }}<br>
+        <strong>Company Address:</strong> {{ entry["Company Address"] }}<br>
+        <strong>Contact Number:</strong> {{ entry["Contact Number"] }}<br>
+        <strong>Company Email:</strong> {{ entry["Company Email"] }}<br>
+        <strong>Company Url:</strong> <a href="{{ entry["Company Url"] }}" target="_blank">{{ entry["Company Url"] }}</a><br>
+    </li>
+    <hr>
+    {% endfor %}
+</ol>
+{% endif %}
+
+<!-- Add this download button -->
+{% if download_filename %}
+<form action="{{ url_for('download', filename=download_filename) }}" method="get">
+    <button class="btn btn-primary" type="submit">Download Excel</button>
+</form>
+{% endif %}
+
+    </div>
+
+    <script>
+        // JavaScript function to show the loading message when the form is submitted
+        function showLoadingMessage() {
+            const loadingMessage = document.getElementById('loading-message');
+            loadingMessage.classList.add('show');
+        }
+
+        // JavaScript function to disable the button after submitting the form
+        function disableButton() {
+            const scrapeButton = document.getElementById('scrape-button');
+            scrapeButton.disabled = true;
+        }
+    </script>
+</body>
+</html>
